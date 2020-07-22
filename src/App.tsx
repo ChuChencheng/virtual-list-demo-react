@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useCallback } from 'react'
+import FixedHeight from './components/FixedHeight'
+import dataGen from './utils/data-generator'
 
-function App() {
+const data = dataGen()
+
+export default function App () {
+  const itemRender = useCallback((item) => {
+    return (
+      <div style={{
+        boxSizing: 'border-box',
+        height: '100%',
+        lineHeight: '50px',
+        textAlign: 'center',
+        border: '1px solid black'
+      }}>{item.value}</div>
+    )
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <FixedHeight
+      data={data}
+      itemHeight={50}
+      itemRender={itemRender}
+    />
+  )
 }
-
-export default App;
