@@ -1,6 +1,18 @@
 import { useMemo } from 'react'
 
-export default function useFixedHeightVirtualList <T> (data: T[], itemHeight: number, scrollTop: number, clientHeight: number) {
+interface IParams<T> {
+  data: T[]
+  itemHeight: number
+  scrollTop: number
+  clientHeight: number
+}
+
+export default function useFixedHeightVirtualList <T> ({
+  data,
+  itemHeight,
+  scrollTop,
+  clientHeight,
+}: IParams<T>) {
   const totalHeight = useMemo(() => data.length * itemHeight, [data.length, itemHeight])
   const startIndex = Math.floor(scrollTop / itemHeight)
   const endIndex = Math.floor(clientHeight / itemHeight) + startIndex + 1

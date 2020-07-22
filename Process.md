@@ -46,17 +46,17 @@ const endIndex = Math.ceil(clientHeight / itemHeight) + startIndex
 
 可以让用户传入一个函数 `getItemHeight` ，接收列表项 index 作为参数，返回这个列表项的实际高度
 
-但也需要一个预估的高度 `estimatedItemHeight` ，来处理列表项没渲染时的高度获取问题
+但也需要一个预估的最小高度 `estimatedItemHeight` ，来处理列表项没渲染时的高度获取问题
 
 具体的计算方式相应也要做出改变：
 
-1. 维护一个数组 `positions` ，缓存每个列表项的高度与距离顶部的距离，根据 `estimatedItemHeight` 初始化这个数组
+1. 维护一个数组 `positions` ，缓存每个列表项的高度与列表项底部距离总高度容器顶部的距离，根据 `estimatedItemHeight` 初始化这个数组
 
 ```typescript
 let positions: Array<{ height: number; offset: number }>
 ```
 
-2. 从 `positions` 中查找 `offset` 最接近且小于 `scrollTop` 的索引，即 `startIndex`
+2. 从 `positions` 中查找 `offset` 最接近且大于等于 `scrollTop` 的索引，即 `startIndex`
 3. 根据 `clientHeight` 与 `estimatedItemHeight` 算出可视范围占了多少列表项，加上 `startIndex` 得到 `endIndex`
 4. 根据传入的 `getItemHeight` 函数，计算出 `startIndex` 到 `endIndex` 范围节点的真实高度，更新 `positions` 数组（包括更新渲染的节点高度以及 `startIndex` 之后每一个列表项的 `offset`）
 

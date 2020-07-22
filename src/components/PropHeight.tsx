@@ -1,19 +1,21 @@
 import React, { useCallback, useRef, useState } from 'react'
-import useFixedHeightVirtualList from '../hooks/useFixedHeightVirtualList'
+import usePropHeightVirtualList from '../hooks/usePropHeightVirtualList'
 
 interface IProps<T> {
   data: T[];
-  itemHeight: number;
+  estimatedItemHeight: number
+  getItemHeight: (index: number) => number
   itemRender: (item: T) => JSX.Element
 }
 
-function FixedHeight <T>({ data, itemHeight, itemRender }: IProps<T>) {
+function PropHeight <T>({ data, estimatedItemHeight, getItemHeight, itemRender }: IProps<T>) {
   const [scrollTop, setScrollTop] = useState(0)
   const [clientHeight, setClientHeight] = useState(0)
 
-  const { totalHeight, visibleData, offset } = useFixedHeightVirtualList({
+  const { startIndex, positions, totalHeight, visibleData, offset } = usePropHeightVirtualList({
     data,
-    itemHeight,
+    estimatedItemHeight,
+    getItemHeight,
     scrollTop,
     clientHeight,
   })
@@ -49,12 +51,12 @@ function FixedHeight <T>({ data, itemHeight, itemRender }: IProps<T>) {
         className="visible-list"
         style={{ transform: `translateY(${offset}px)` }}
       >
-        {visibleData.map((data) => (
-          <div key={Math.random()} style={{ height: `${itemHeight}px` }}>{itemRender(data)}</div>
+        {visibleData.map((data, index) => (
+          <div key={Math.random()} style={{ height: `${positions[index + startIndex].height}px` }}>{itemRender(data)}</div>
         ))}
       </div>
     </div>
   )
 }
 
-export default FixedHeight
+export default PropHeight

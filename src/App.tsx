@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import FixedHeight from './components/FixedHeight'
+import PropHeight from './components/PropHeight'
 import dataGen from './utils/data-generator'
 
 const data = dataGen()
@@ -17,10 +18,20 @@ export default function App () {
     )
   }, [])
 
+  const getItemHeight = useCallback((index: number) => {
+    return 50 + (index % 5) * 10
+  }, [])
+
   return (
-    <FixedHeight
+    // <FixedHeight
+    //   data={data}
+    //   itemHeight={50}
+    //   itemRender={itemRender}
+    // />
+    <PropHeight
       data={data}
-      itemHeight={50}
+      estimatedItemHeight={50}
+      getItemHeight={getItemHeight}
       itemRender={itemRender}
     />
   )
