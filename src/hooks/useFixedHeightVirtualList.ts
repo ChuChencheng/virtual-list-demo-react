@@ -22,6 +22,6 @@ export default function useFixedHeightVirtualList <T> ({
   return {
     totalHeight,
     visibleData,
-    offset
+    offset,
   }
 }

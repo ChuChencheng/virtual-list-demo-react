@@ -1,12 +1,12 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import binarySearch from '../utils/binary-search'
 
 interface IParams<T> {
   data: T[]
-  getItemHeight: (index: number) => number
   estimatedItemHeight: number
   scrollTop: number
   clientHeight: number
+  itemRefs: React.MutableRefObject<(HTMLDivElement | null)[]>
 }
 
 interface IPosition {
@@ -14,12 +14,12 @@ interface IPosition {
   offset: number
 }
 
-export default function usePropHeightVirtualList <T> ({
+export default function useReactiveHeightVirtualList <T> ({
   data,
-  getItemHeight,
   estimatedItemHeight,
   scrollTop,
   clientHeight,
+  itemRefs,
 }: IParams<T>) {
   const [positions, setPositions] = useState<IPosition[]>([])
 
@@ -41,26 +41,26 @@ export default function usePropHeightVirtualList <T> ({
   const endIndex = Math.ceil(clientHeight / estimatedItemHeight) + startIndex + 1
   const visibleData = useMemo(() => data.slice(startIndex, endIndex), [data, endIndex, startIndex])
 
-  const positionsRef = useRef<IPosition[]>()
-  positionsRef.current = positions
   // 根据渲染的列表项，获取实际高度并更新 `positions` 数组
-  useEffect(() => {
-    if (!positionsRef.current || !positionsRef.current.length || startIndex === -1) return
-    const positions = positionsRef.current
+  const updatePositions = useCallback(() => {
+    if (!itemRefs.current.length) return
+    if (!positions.length || startIndex === -1) return
     const newPositions: IPosition[] = []
     let firstUpdatedIndex = -1
-    const limit = Math.min(positions.length - 1, endIndex)
-    for (let i = startIndex; i <= limit; i++) {
-      const realHeight = getItemHeight(i)
-      if (realHeight !== positions[i].height) {
-        if (firstUpdatedIndex === -1) firstUpdatedIndex = i
-        newPositions[i] = {
-          height: realHeight,
-          // 先随便赋个值，后面再统一更新
-          offset: 0
+    itemRefs.current.forEach((node, index) => {
+      if (node) {
+        const i = index + startIndex
+        const realHeight = node.getBoundingClientRect().height
+        if (realHeight !== positions[i].height) {
+          if (firstUpdatedIndex === -1) firstUpdatedIndex = i
+          newPositions[i] = {
+            height: realHeight,
+            // 先随便赋个值，后面再统一更新
+            offset: 0
+          }
         }
       }
-    }
+    })
     if (firstUpdatedIndex !== -1) {
       // 有更新的节点
       positions.forEach((p, i) => {
@@ -73,7 +73,7 @@ export default function usePropHeightVirtualList <T> ({
       }
       setPositions(newPositions)
     }
-  }, [endIndex, getItemHeight, startIndex])
+  }, [itemRefs, positions, startIndex])
 
   return {
     startIndex,
@@ -81,5 +81,6 @@ export default function usePropHeightVirtualList <T> ({
     totalHeight: positions[positions.length - 1]?.offset || 0,
     visibleData,
     offset: (positions[startIndex]?.offset || 0) - (positions[startIndex]?.height || 0),
+    updatePositions,
   }
 }

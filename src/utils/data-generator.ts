@@ -1,4 +1,4 @@
-export default function dataGen (amount = 100000) {
+export default function dataGen (amount = 1000) {
   const data = []
   for (let i = 0; i < amount; i++) {
     data.push({
