@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react'
-import useReactiveHeightVirtualList from '../hooks/useReactiveHeightVirtualList'
+import useBinaryIndexedTreeVirtualList from '../hooks/useBinaryIndexedTreeVirtualList'
 
 interface IProps<T> {
   data: T[];
@@ -7,12 +7,12 @@ interface IProps<T> {
   itemRender: (item: T) => JSX.Element
 }
 
-function ReactiveHeight <T>({ data, estimatedItemHeight, itemRender }: IProps<T>) {
+function OptimizedReactiveHeight <T>({ data, estimatedItemHeight, itemRender }: IProps<T>) {
   const [scrollTop, setScrollTop] = useState(0)
   const [clientHeight, setClientHeight] = useState(0)
   const itemRefs = useRef<Array<HTMLDivElement | null>>([])
 
-  const { totalHeight, visibleData, offset, updatePositions } = useReactiveHeightVirtualList({
+  const { totalHeight, visibleData, offset, updatePositions } = useBinaryIndexedTreeVirtualList({
     data,
     estimatedItemHeight,
     scrollTop,
@@ -73,4 +73,4 @@ function ReactiveHeight <T>({ data, estimatedItemHeight, itemRender }: IProps<T>
   )
 }
 
-export default ReactiveHeight
+export default OptimizedReactiveHeight

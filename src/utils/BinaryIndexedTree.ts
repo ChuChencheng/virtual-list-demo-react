@@ -76,7 +76,7 @@ class BinaryIndexedTree {
     let idx = 0
     let len = this.tree.length
     let bitMask = this.bitMask
-    while (bitMask != 0 && (idx < len)) {
+    while (bitMask !== 0 && (idx < len)) {
       let tIdx = idx + bitMask
       if (target === this.tree[tIdx]) {
         return tIdx
@@ -99,7 +99,7 @@ class BinaryIndexedTree {
     let idx = 0
     let len = this.tree.length
     let bitMask = this.bitMask
-    while (bitMask != 0 && (idx < len)) {
+    while (bitMask !== 0 && (idx < len)) {
       let tIdx = idx + bitMask
       if (target >= this.tree[tIdx]) {
         idx = tIdx
@@ -119,7 +119,7 @@ class BinaryIndexedTree {
     let idx = 0
     let len = this.tree.length
     let bitMask = this.bitMask
-    while (bitMask != 0 && (idx < len)) {
+    while (bitMask !== 0 && (idx < len)) {
       let tIdx = idx + bitMask
       if (target === this.tree[tIdx]) {
         return tIdx

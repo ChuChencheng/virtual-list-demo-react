@@ -37,7 +37,10 @@ export default function useReactiveHeightVirtualList <T> ({
   }, [data.length, estimatedItemHeight])
 
   // 二分查找 `startIndex`
+  const t1 = performance.now()
   const startIndex = binarySearch(positions.slice(0, Math.ceil(scrollTop / estimatedItemHeight) + 1).map((p) => p.offset), scrollTop)
+  const t2 = performance.now()
+  console.log('查找 startIndex 耗时： ', t2 - t1)
   const endIndex = Math.ceil(clientHeight / estimatedItemHeight) + startIndex + 1
   const visibleData = useMemo(() => data.slice(startIndex, endIndex), [data, endIndex, startIndex])
 
@@ -47,6 +50,7 @@ export default function useReactiveHeightVirtualList <T> ({
     if (!positions.length || startIndex === -1) return
     const newPositions: IPosition[] = []
     let firstUpdatedIndex = -1
+    const t1 = performance.now()
     itemRefs.current.forEach((node, index) => {
       if (node) {
         const i = index + startIndex
@@ -71,13 +75,13 @@ export default function useReactiveHeightVirtualList <T> ({
       for (let i = firstUpdatedIndex; i < length; i++) {
         newPositions[i].offset = newPositions[i].height + (newPositions[i - 1]?.offset || 0)
       }
+      const t2 = performance.now()
+      console.log('更新缓存耗时： ', t2 - t1)
       setPositions(newPositions)
     }
   }, [itemRefs, positions, startIndex])
 
   return {
-    startIndex,
-    positions,
     totalHeight: positions[positions.length - 1]?.offset || 0,
     visibleData,
     offset: (positions[startIndex]?.offset || 0) - (positions[startIndex]?.height || 0),

@@ -3,6 +3,7 @@ import { Switch, Route, useHistory, useLocation, Redirect } from 'react-router-d
 import FixedHeight from './components/FixedHeight'
 import PropHeight from './components/PropHeight'
 import ReactiveHeight from './components/ReactiveHeight'
+import OptimizedReactiveHeight from './components/OptimizedReactiveHeight'
 import dataGen from './utils/data-generator'
 
 const data = dataGen()
@@ -98,6 +99,13 @@ export default function App () {
           </Route>
           <Route path="/reactive-height">
             <ReactiveHeight
+              data={data}
+              estimatedItemHeight={50}
+              itemRender={reactiveHeightItemRender}
+            />
+          </Route>
+          <Route path="/optimized-reactive-height">
+            <OptimizedReactiveHeight
               data={data}
               estimatedItemHeight={50}
               itemRender={reactiveHeightItemRender}

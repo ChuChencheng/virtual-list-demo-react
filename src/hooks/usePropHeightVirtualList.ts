@@ -37,7 +37,10 @@ export default function usePropHeightVirtualList <T> ({
   }, [data.length, estimatedItemHeight])
 
   // 二分查找 `startIndex`
+  const t1 = performance.now()
   const startIndex = binarySearch(positions.slice(0, Math.ceil(scrollTop / estimatedItemHeight) + 1).map((p) => p.offset), scrollTop)
+  const t2 = performance.now()
+  console.log('查找 startIndex 耗时： ', t2 - t1)
   const endIndex = Math.ceil(clientHeight / estimatedItemHeight) + startIndex + 1
   const visibleData = useMemo(() => data.slice(startIndex, endIndex), [data, endIndex, startIndex])
 
@@ -50,6 +53,7 @@ export default function usePropHeightVirtualList <T> ({
     const newPositions: IPosition[] = []
     let firstUpdatedIndex = -1
     const limit = Math.min(positions.length - 1, endIndex)
+    const t1 = performance.now()
     for (let i = startIndex; i <= limit; i++) {
       const realHeight = getItemHeight(i)
       if (realHeight !== positions[i].height) {
@@ -71,6 +75,8 @@ export default function usePropHeightVirtualList <T> ({
       for (let i = firstUpdatedIndex; i < length; i++) {
         newPositions[i].offset = newPositions[i].height + (newPositions[i - 1]?.offset || 0)
       }
+      const t2 = performance.now()
+      console.log('更新缓存耗时： ', t2 - t1)
       setPositions(newPositions)
     }
   }, [endIndex, getItemHeight, startIndex])
