@@ -60,6 +60,7 @@ function ReactiveHeight <T>({ data, estimatedItemHeight, itemRender }: IProps<T>
         {visibleData.map((data, index) => (
           <div
             key={(data as any).id}
+            // 有其他办法拿到一组 DOM 吗？
             ref={(node) => {
               itemRefs.current[index] = node
               if (visibleData.length === itemRefs.current.filter(Boolean).length) {
