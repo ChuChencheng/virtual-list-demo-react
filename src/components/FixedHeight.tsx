@@ -50,7 +50,7 @@ function FixedHeight <T>({ data, itemHeight, itemRender }: IProps<T>) {
         style={{ transform: `translateY(${offset}px)` }}
       >
         {visibleData.map((data) => (
-          <div key={Math.random()} style={{ height: `${itemHeight}px` }}>{itemRender(data)}</div>
+          <div key={(data as any).id} style={{ height: `${itemHeight}px` }}>{itemRender(data)}</div>
         ))}
       </div>
     </div>

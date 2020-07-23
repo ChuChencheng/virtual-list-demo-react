@@ -52,7 +52,7 @@ function PropHeight <T>({ data, estimatedItemHeight, getItemHeight, itemRender }
         style={{ transform: `translateY(${offset}px)` }}
       >
         {visibleData.map((data, index) => (
-          <div key={Math.random()} style={{ height: `${positions[index + startIndex].height}px` }}>{itemRender(data)}</div>
+          <div key={(data as any).id} style={{ height: `${positions[index + startIndex].height}px` }}>{itemRender(data)}</div>
         ))}
       </div>
     </div>

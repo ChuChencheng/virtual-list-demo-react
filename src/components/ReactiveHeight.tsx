@@ -59,7 +59,7 @@ function ReactiveHeight <T>({ data, estimatedItemHeight, itemRender }: IProps<T>
       >
         {visibleData.map((data, index) => (
           <div
-            key={Math.random()}
+            key={(data as any).id}
             ref={(node) => {
               itemRefs.current[index] = node
               if (visibleData.length === itemRefs.current.filter(Boolean).length) {
