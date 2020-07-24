@@ -17,6 +17,7 @@ export default function useFixedHeightVirtualList <T> ({
   const startIndex = Math.floor(scrollTop / itemHeight)
   const endIndex = Math.ceil(clientHeight / itemHeight) + startIndex + 1
   const visibleData = useMemo(() => data.slice(startIndex, endIndex), [data, endIndex, startIndex])
+  // translateY
   const offset = useMemo(() => startIndex * itemHeight, [itemHeight, startIndex])
 
   return {
